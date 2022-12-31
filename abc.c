@@ -1,69 +1,165 @@
-
 #include<stdio.h>
 #include<sys/types.h>
-#include<stdlib.h>
-#include<unistd.h>
-void bubblesort(int arr[10],int n)
+#define MAX 50
+
+void bsort(int arr[MAX], int size)
 {
-int i,j,temp;
-  for(i=0;i<n;i++)
-   {
-     for(j=0;j<n-1;j++)
-       {
-         if(arr[j]>arr[i])
-          {
-           temp=arr[j];
-           arr[j]=arr[j+1];
-           arr[j+1]=temp;
-          }
-       }
+    int temp;
+    for(int i=0;i<size;i++)
+    {
+        for(int j=0;j<size-1;j++)
+        {
+            if(arr[j+1]<arr[j])
+            {
+                temp=arr[j];
+                arr[j]=arr[j+1];
+                arr[j+1]=temp;
+            }
+        }
+    }
+    for(int i=0;i<size;i++)
+    {
+        printf("\t-->%d",arr[i]);
     }
 }
-void insertion(int arr[20],int n)
+
+void insert(int arr[MAX], int size)
 {
-  int i,j,temp;
-  for(i=0;i<n;i++)
-  {
-   temp=arr[i];j=i+1;
-    while(j>=0 && temp<=arr[j])
+    int temp=0;
+    for(int i=0;i<size;i++)
     {
-     arr[j+1]=arr[j];j=j-1;
-     }
-     arr[j+1]=temp;
-  }
+        int j=i-1;
+        while(j>=0)
+        {
+            if(arr[j+1]<arr[j])
+            {
+                temp=arr[j+1];
+                arr[j+1]=arr[j];
+                arr[j]=temp;
+            }
+            j--;
+        }
+    }
+    for(int i=0;i<size;i++)
+    {
+        printf("\t-->%d",arr[i]);
+    }
 }
-void fork1()
-{
-int arr[25],arr1[25],n,i;
-printf("\nenter the no of value in array:");
-scanf("%d",&n);
-printf("enter the array element:");
-for(i=0;i<n;i++)
-scanf("%d",&arr[i]);
-int pid=fork();
-if(pid==0)
-{
-sleep(5);
-printf("\nchild process");
-printf("child process id%d\n",getpid());
-insertion(arr,n);
-printf("\n element sorted in insertion sort");
-printf("\n");
-for(i=0;i<n;i++)
-printf("%d",arr[i]);
-printf("\b");
-printf("\nparent process id=%d\n",getpid());
-sleep(5);
-bubblesort(arr,n);
-printf("element sorted using bubblesort:");
-printf("/n");
-for(i=0;i<n;i++)
-printf("%d",arr[i]);
-printf("\n\n\n");
-}
-}
+
 int main()
 {
-fork1();
-return 0;
+    int pid;
+    int n,arr[MAX];
+
+    printf("enter the no. of element:");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++)
+    {
+        printf("\t-->");
+        scanf("%d",&arr[i]);
+    }
+    pid=fork();
+    if(pid==0)
+    {
+        printf("\nparent(bubble)");
+        bsort(arr,n);
+
+    }
+    else
+    {
+        printf("child(insertion)");
+        insert(arr,n);
+    }
 }
+
+/*#include <stdio.h>
+#include <sys/types.h>
+#define MAX 50
+
+void bsort(int arr[MAX], int size)
+{
+    int temp;
+
+    for (int i = 0; i < size; i++)
+    {
+
+        for (int j = 0; j < size - 1; j++)
+        {
+            if (arr[j + 1] < arr[j]) // 3 2 1  //2 3
+            {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+
+        printf("\t->%d", arr[i]);
+    }
+}
+
+void insert(int arr[MAX], int size)
+{
+
+    int temp = 0;
+
+    for(int i=1; i < size; i++)
+    {
+        int j=i-1;
+        while (j >= 0)
+        {
+            if(arr[j+1]<arr[j])
+            {
+                temp = arr[j+1];
+                arr[j+1] = arr[j];
+                arr[j] = temp;
+            }
+            j--;
+        }
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+
+        printf("\t->%d", arr[i]);
+    }
+
+
+}
+
+int main()
+{
+
+    int pid;
+    int n;
+    int arr[MAX];
+
+    printf("\nEnter no of elements: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++)
+    {
+
+        printf("--> ");
+        scanf("%d", &arr[i]);
+    }
+
+    pid = fork();
+
+    if (pid == 0)
+    {
+        printf("\nChild (insertion)\n");
+        insert(arr, n);
+    }
+    else
+    {
+        printf("Parent (Bubble)\n");
+        bsort(arr, n);
+    }
+
+    return 0;
+}
+*/
